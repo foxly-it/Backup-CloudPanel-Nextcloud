@@ -27,6 +27,14 @@ clpLocation="/home/cloudpanel/htdocs/"
 user="clp"
 #
 
+# Check for root
+#
+if [ "$(id -u)" != "0" ]
+then
+    errorecho "ERROR: This script has to be run as root!"
+    exit 1
+fi
+
 # Nextcloud Maintenance aktivieren
 echo "\n###### Aktiviere Wartungsmodus: ${currentDateReadable} ######\n"
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --on
