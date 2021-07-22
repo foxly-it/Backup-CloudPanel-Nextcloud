@@ -4,7 +4,7 @@
 
 [![Blog](https://img.shields.io/static/v1.svg?color=FF6C54&labelColor=55555&logoColor=ffffff&style=for-the-badge&label=Foxly.de&message=IT-Blog)](https://foxly.de "How-To guides, opinions and much more!")
 [![GitHub](https://img.shields.io/static/v1.svg?color=FF6C54&labelColor=55555&logoColor=ffffff&style=for-the-badge&label=Foxly.de&message=GitHub)](https://github.com/foxly-it "view the source for all of our repositories.")
-[![CloudPanel](https://img.shields.io/static/v1.svg?color=398fdb&labelColor=55555&logoColor=ffffff&style=for-the-badge&label=CloudPanel.io&message=Nextcloud)](https://github.com/foxly-it "view the source for all of our repositories.")
+[![CloudPanel](https://img.shields.io/static/v1.svg?color=398fdb&labelColor=55555&logoColor=ffffff&style=for-the-badge&label=CloudPanel.io&message=Nextcloud)](https://foxly.de/category-article-list/5-nextcloud/ "Installation Guides.")
 
 
 This backupscript is designed to be simple. It is adapted for [CloudPanel](CloudPanel.io). Of course there is also a focus on Nextcloud.
