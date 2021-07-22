@@ -90,7 +90,7 @@ global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
 if [ ${global_exit} -eq 0 ]; then
     info "Backup und/oder Prune erfolgreich beendet"
 elif [ ${global_exit} -eq 1 ]; then
-    info "Backup und/oder Prune beendet Warungen"
+    info "Backup und/oder Prune beendet mit Warungen"
 else
     info "Backup und/oder Prune beendet mit Fehlern"
 fi
