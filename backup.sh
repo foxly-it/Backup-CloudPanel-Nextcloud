@@ -35,12 +35,10 @@ then
     exit 1
 fi
 
-# Nextcloud Maintenance aktivieren
+# Nextcloud Maintenance
 echo "\n###### Aktiviere Wartungsmodus: ${currentDateReadable} ######\n"
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --on
 
-
-# Hier koennen auch explezite Datenbanken angegeben werden
 echo  "\n###### Datenbank Backups ######\n"
 clpctl db:backup --databases=$databases
 echo  "\n###### Datenbank Backups erstellt! ######\n"
@@ -48,7 +46,6 @@ echo  "\n###### Datenbank Backups erstellt! ######\n"
 
 
 export BORG_REPO=$backupRepo
-# Euer Passwort muss hier hinterlegt werden.
 export BORG_PASSPHRASE=$backupPassword
  
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
@@ -56,7 +53,9 @@ trap 'echo $( date ) Backup unterbrochen >&2; exit 2' INT TERM
  
 info "Start backup"
  
-# Hier wird das Backup erstellt, passt das so an wie Ihr das gerne haben möchtet
+
+# Here the backup is created, adjust this as you would like to have it
+
 borg create                         \
     --stats                         \
     --compression lz4               \
@@ -66,7 +65,7 @@ borg create                         \
  
 backup_exit=$?
 
-# Nextcloud Maintenance deaktivieren
+# Nextcloud Maintenance
 echo  "\n###### Deaktiviere Wartungsmodus ######\n"
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --off
 
@@ -75,7 +74,7 @@ echo "Storage space usage of the backups:\n"
 df -h ${backupRepo}
 
 info "Loeschen von alten Backups"
-# Automatisches löschen von alten Backups
+# Automatically delete old backups
 borg prune                          \
     --prefix '{hostname}-'          \
     --keep-daily    7               \
@@ -84,7 +83,7 @@ borg prune                          \
  
 prune_exit=$?
 
-# Informationen ob das Backup geklappt hat.
+# Information whether the backup worked.
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
  
 if [ ${global_exit} -eq 0 ]; then
