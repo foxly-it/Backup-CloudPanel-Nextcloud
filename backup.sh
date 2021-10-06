@@ -1,25 +1,113 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
-# @author  Mark Schenk
-# @copyright   2017-2021 Foxly.de
-# @license GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
-# This backup script is customized for CloudPanel. However, with small changes, you can configure it for any purpose. For more information visit: https://foxly.de
+START=$(date +%s)
+OS_DISTRO="$(lsb_release -ds)"
+OS_ARCH="$(uname -m)"
+NUM_CORES=$(nproc || echo 1)
 #
-# ToDo:
+##############################################################
+# Title          : BBNC - BorgBackup Nextcloud               #
+# Description    : BorgBackup Nextcloud for Debian/Ubuntu    #
+#                                                            #
+#                                                            #
+# Author         : Mark Schenk <info@foxly.de>               #
+# Date           : 2021-10-06 08:32                          #
+# License        : MIT                                       #
+# Version        : 1.1                                       #
+#                                                            #
+# Usage          : bash ./backup.sh                          #
+echo ""                                                      #
+echo " Detected OS     : $OS_DISTRO"                         #
+echo " Detected Arch   : $OS_ARCH"                           #
+echo " Detected Cores  : $NUM_CORES"                         #
+echo ""                                                      #
+##############################################################
+####################
+# Helper functions #
+####################
+
+displaytime() {
+  local T=$1
+  local D=$((T / 60 / 60 / 24))
+  local H=$((T / 60 / 60 % 24))
+  local M=$((T / 60 % 60))
+  local S=$((T % 60))
+
+  ((D > 0)) && printf '%d days ' $D
+  ((H > 0)) && printf '%d hours ' $H
+  ((M > 0)) && printf '%d minutes ' $M
+  ((D > 0 || H > 0 || M > 0)) && printf 'and '
+
+  printf '%d seconds\n' $S
+}
+####################
+# Colors           #
+####################
+
+FSI='\033['
+FRED="${FSI}1;31m"
+FGREEN="${FSI}1;32m"
+FYELLOW="${FSI}1;33m"
+FBLUE="${FSI}1;36m"
+FEND="${FSI}0m"
+
+######################
+# Check requirements #
+######################
+
+# Check if user is root
+[ "$(id -u)" != "0" ] && {
+  echo "Error: You must be root or use sudo to run this script"
+  exit 1
+}
+
+command_exists() {
+  command -v "$@" > /dev/null 2>&1
+}
+
+# Make sure, that we are on Debian or Ubuntu
+if ! command_exists apt-get; then
+  echo "This script cannot run on any other system than Debian or Ubuntu"
+  exit 1
+fi
+
+# Checking if lsb_release is installed or install it
+if ! command_exists lsb_release; then
+  apt-get update && apt-get install -qq lsb-release > /dev/null 2>&1
+fi
+#
+#
+#
+#                                       ToDo:
 #
 # Which PHP version do you use e.g. 7.3 , 7.4 , 8.0
-phpversion="7.4"
+phpversion="8.0"
 # Just adjust the domain here e.g. cloud.example.org or example.org
-domain="cloud.example.org"
-# You can back up all databases or specific databases. For all databases enter "all".
-databases="db1,db2 or all"
+domain="nextcloud.domain.tld"
+#
+# DATABASES: Remove "#" for the correct database
+#
+# You can back up all databases or specific databases. For all databases enter "all".  --> Optional only for MariaDB/MySQL databases stored in CloudPanel.
+# databases="db1,db2 or all"
+#
+# echo  " Datenbank Backups "
+# clpctl db:backup --databases=$databases
+# echo  " Datenbank Backups erstellt! "
+#
+# Optional only for PostgreSQL databases that are not stored in CloudPanel.
+echo -e "\e[93mcreate database backups"
+databases="DATABASENAME"
+postbackupdir="/home/cloudpanel/backups"
+sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql
+echo -e "${FGREEN}Process has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
+#
 # Here you can assign a password (Borg passphrase) for the Borg backup archive.
-backupPassword="p@ssw0rd"
+backupPassword="P@ssw0rd"
 # Here you have to specify the path to the Borg repository.
-backupRepo="/path/to/backup"
-
-
-
+backupRepo="/path/to/Repo"
+#
+#
+#
 # No Changes needed
 clpLocation="/home/cloudpanel/htdocs/"
 # You must edit this user if you are not using the default installation of ClouPanel. 
@@ -27,22 +115,10 @@ clpLocation="/home/cloudpanel/htdocs/"
 user="clp"
 #
 
-# Check for root
-#
-if [ "$(id -u)" != "0" ]
-then
-    errorecho "ERROR: This script has to be run as root!"
-    exit 1
-fi
-
 # Nextcloud Maintenance
-echo "\n###### Aktiviere Wartungsmodus: ${currentDateReadable} ######\n"
+echo ""
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --on
-
-echo  "\n###### Datenbank Backups ######\n"
-clpctl db:backup --databases=$databases
-echo  "\n###### Datenbank Backups erstellt! ######\n"
-
+echo ""
 
 
 export BORG_REPO=$backupRepo
@@ -66,11 +142,12 @@ borg create                         \
 backup_exit=$?
 
 # Nextcloud Maintenance
-echo  "\n###### Deaktiviere Wartungsmodus ######\n"
+echo ""
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --off
-
-echo "\n###### Ende des Backups: ${endDateReadable} (${durationReadable}) ######\n"
-echo "Storage space usage of the backups:\n"
+echo ""
+echo "Ende des Backups:"
+echo "Storage space usage of the backups:"
+echo ""
 df -h ${backupRepo}
 
 info "Loeschen von alten Backups"
@@ -87,11 +164,11 @@ prune_exit=$?
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
  
 if [ ${global_exit} -eq 0 ]; then
-    info "Backup und/oder Prune erfolgreich beendet"
+    info "\e[32mBackup und/oder Prune erfolgreich beendet"
 elif [ ${global_exit} -eq 1 ]; then
-    info "Backup und/oder Prune beendet mit Warungen"
+    info "\e[33mBackup und/oder Prune beendet mit Warungen"
 else
-    info "Backup und/oder Prune beendet mit Fehlern"
+    info "\e[31mBackup und/oder Prune beendet mit Fehlern"
 fi
- 
+echo -e "${FGREEN}Process has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
 exit ${global_exit}
