@@ -99,7 +99,7 @@ echo -e "\e[93mcreate database backups"
 databases="DATABASENAME"
 postbackupdir="/home/cloudpanel/backups"
 sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql
-echo -e "${FGREEN}Process has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
+echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
 #
 # Here you can assign a password (Borg passphrase) for the Borg backup archive.
 backupPassword="P@ssw0rd"
@@ -164,11 +164,10 @@ prune_exit=$?
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
  
 if [ ${global_exit} -eq 0 ]; then
-    info "\e[32mBackup und/oder Prune erfolgreich beendet"
+    echo -e "${FGREEN}Backup und/oder Prune erfolgreich beendet nach $(displaytime $(($(date +%s) - START)))!${FEND}"
 elif [ ${global_exit} -eq 1 ]; then
-    info "\e[33mBackup und/oder Prune beendet mit Warungen"
+    echo -e "${FYELLOW}Backup und/oder Prune beendet mit Warungen nach $(displaytime $(($(date +%s) - START)))!${FEND}"
 else
-    info "\e[31mBackup und/oder Prune beendet mit Fehlern"
+    echo -e "${FRED}Backup und/oder Prune beendet mit Fehlern nach $(displaytime $(($(date +%s) - START)))!${FEND}"
 fi
-echo -e "${FGREEN}Process has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
 exit ${global_exit}
