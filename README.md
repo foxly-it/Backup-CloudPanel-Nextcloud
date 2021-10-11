@@ -1,5 +1,5 @@
 # Backup-CloudPanel-Nextcloud
-*BorgBackup Script - CloudPanel, Nextcloud
+*BorgBackup Script - CloudPanel, Nextcloud*
 
 [![foxly.de](https://foxly.de/media/223-github-logo-png/)](https://foxly.de)
 
