@@ -42,6 +42,5 @@ In order to back up data, a repository must first be created. This can be create
 
 #### Recommended
 
-* Ubuntu 20.04 (__Focal__ Fossa)
 * Debian 10 (__Buster__)
 * Raspbian 10 (__Buster__)
