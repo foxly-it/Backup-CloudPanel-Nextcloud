@@ -13,19 +13,14 @@ NUM_CORES=$(nproc || echo 1)
 # Author         : Mark Schenk <info@foxly.de>               #
 # Date           : 2021-10-06 08:32                          #
 # License        : MIT                                       #
-# Version        : 1.1                                       #
+# Version        : 1.2                                       #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
-echo ""                                                      #
-echo " Detected OS     : $OS_DISTRO"                         #
-echo " Detected Arch   : $OS_ARCH"                           #
-echo " Detected Cores  : $NUM_CORES"                         #
-echo ""                                                      #
 ##############################################################
 ####################
 # Helper functions #
 ####################
-backup_VER="v1.1"
+backup_VER="v1.2"
 
 str_repeat() {
   printf -v v "%-*s" "$1" ""
@@ -94,6 +89,11 @@ echo " $WELCOME_TXT"
 echo " $(str_repeat "$WELCOME_FEN" "#")"
 echo ""
 
+echo ""                                                      
+echo " Detected OS     : $OS_DISTRO"                         
+echo " Detected Arch   : $OS_ARCH"                           
+echo " Detected Cores  : $NUM_CORES"                         
+echo ""          
 #######################
 # TODO  /   Variables #
 #######################
@@ -129,7 +129,7 @@ backupRepo="/path/to/Repo"
 #                                                                              PostgreSQL                                                                               #
 #########################################################################################################################################################################
 # Optional only for PostgreSQL databases that are not stored in CloudPanel.                                                                                             #
-echo -e "\e[93mcreate database backups"                                                                                                                                 #
+echo -e "\e[93mCreate database backup"                                                                                                                                 #
 databases="DATABASENAME"                                                                                                                                                #
 postbackupdir="/home/cloudpanel/backups"                                                                                                                                #
 sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql                                                                                #
