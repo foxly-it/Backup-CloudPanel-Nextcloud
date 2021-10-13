@@ -13,14 +13,14 @@ NUM_CORES=$(nproc || echo 1)
 # Author         : Mark Schenk <info@foxly.de>               #
 # Date           : 2021-10-13 07:32                          #
 # License        : LGPL-2.1                                  #
-# Version        : 1.2                                       #
+# Version        : 1.2.1                                     #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
 ##############################################################
 ####################
 # Helper functions #
 ####################
-backup_VER="v1.2"
+backup_VER="v1.2.1"
 
 str_repeat() {
   printf -v v "%-*s" "$1" ""
@@ -160,7 +160,7 @@ export BORG_REPO=$backupRepo
 export BORG_PASSPHRASE=$backupPassword
  
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
-trap 'echo $( date ) Backup unterbrochen >&2; exit 2' INT TERM
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
  
 info "Start backup"
  
@@ -180,12 +180,12 @@ backup_exit=$?
 echo ""
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --off
 echo ""
-echo "Ende des Backups:"
+echo "End of the backup:"
 echo "Storage space usage of the backups:"
 echo ""
 df -h ${backupRepo}
 
-info "Loeschen von alten Backups"
+info "Delete old backups"
 # Automatically delete old backups
 borg prune                          \
     --prefix '{hostname}-'          \
@@ -199,10 +199,10 @@ prune_exit=$?
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
  
 if [ ${global_exit} -eq 0 ]; then
-    echo -e "${FGREEN}Backup und/oder Prune erfolgreich beendet nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FGREEN}Backup and/or Prune successfully completed after $(displaytime $(($(date +%s) - START)))!${FEND}"
 elif [ ${global_exit} -eq 1 ]; then
-    echo -e "${FYELLOW}Backup und/oder Prune beendet mit Warungen nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FYELLOW}Backup and/or Prune ends with warnings after $(displaytime $(($(date +%s) - START)))!${FEND}"
 else
-    echo -e "${FRED}Backup und/oder Prune beendet mit Fehlern nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FRED}Backup and/or Prune exits with errors after $(displaytime $(($(date +%s) - START)))!${FEND}"
 fi
 exit ${global_exit}
