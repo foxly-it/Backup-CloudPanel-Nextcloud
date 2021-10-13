@@ -25,6 +25,8 @@ echo ""                                                      #
 ####################
 # Helper functions #
 ####################
+backup_VER="v1.1"
+
 
 displaytime() {
   local T=$1
@@ -40,6 +42,7 @@ displaytime() {
 
   printf '%d seconds\n' $S
 }
+
 ####################
 # Colors           #
 ####################
@@ -76,6 +79,16 @@ if ! command_exists lsb_release; then
   apt-get update && apt-get install -qq lsb-release > /dev/null 2>&1
 fi
 
+echo -ne "\ec"
+
+WELCOME_TXT="Welcome to BBNC - BorgBackup Nextcloud ${backup_VER}"
+WELCOME_FEN=${#WELCOME_TXT}
+
+echo ""
+echo " $(str_repeat "$WELCOME_FEN" "#")"
+echo " $WELCOME_TXT"
+echo " $(str_repeat "$WELCOME_FEN" "#")"
+echo ""
 
 #######################
 # TODO  /   Variables #
