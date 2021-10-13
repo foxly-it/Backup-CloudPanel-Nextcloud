@@ -21,3 +21,5 @@ First, a BorgBackup repository must be created.
 ```
 
 Now you can adjust the script to your needs.
+
+[![foxly.de](https://foxly.de/media/232-png-bild-png/)](https://foxly.de)
