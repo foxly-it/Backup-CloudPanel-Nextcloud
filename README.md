@@ -27,7 +27,7 @@ In order to back up data, a repository must first be created. This can be create
 ```
   borg init --encryption=repokey user@server.ip.or.domain:/path/to/backup
 ```
----
+
 ---
 
 ## Features
