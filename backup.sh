@@ -120,7 +120,7 @@ backupRepo="/path/to/Repo"
 # You can back up all databases or specific databases. For all databases enter "all".  --> Optional only for MariaDB/MySQL databases stored in CloudPanel.              #
 # databases="db1,db2 or all"                                                                                                                                            #
 #                                                                                                                                                                       #
-# echo -e "\e[93mcreate database backups"                                                                                                                               #
+# echo -e "\e[93mCreate database backup"                                                                                                                               #
 # clpctl db:backup --databases=$databases                                                                                                                               #
 # echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                        #
 #########################################################################################################################################################################
