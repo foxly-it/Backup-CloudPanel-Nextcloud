@@ -11,8 +11,8 @@ NUM_CORES=$(nproc || echo 1)
 #                  You need to adjust the settings in the    #
 #                  TODO section for yourself                 #
 # Author         : Mark Schenk <info@foxly.de>               #
-# Date           : 2021-10-06 08:32                          #
-# License        : MIT                                       #
+# Date           : 2021-10-13 07:32                          #
+# License        : LGPL-2.1                                  #
 # Version        : 1.2                                       #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
