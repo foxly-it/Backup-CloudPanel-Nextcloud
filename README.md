@@ -1,6 +1,3 @@
-
-[![foxly.de](https://foxly.de/media/223-github-logo-png/)](https://foxly.de)
-
 <div align=center>
   
 # Backup-CloudPanel-Nextcloud
