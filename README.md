@@ -1,7 +1,7 @@
 <div align=center>
   
 # Backup-CloudPanel-Nextcloud
-#### BorgBackup Script - CloudPanel, Nextcloud*
+#### BorgBackup Script - CloudPanel, Nextcloud
 
 [![Commits](https://img.shields.io/github/last-commit/foxly-it/Backup-CloudPanel-Nextcloud?style=flat-square)](https://github.com/foxly-it/Backup-CloudPanel-Nextcloud/commits/main) [![GitHub release](https://img.shields.io/github/release/foxly-it/Backup-CloudPanel-Nextcloud?style=flat-square)](https://github.com/foxly-it/Backup-CloudPanel-Nextcloud/releases) [![GitHub license](https://img.shields.io/github/license/foxly-it/Backup-CloudPanel-Nextcloud?style=flat-square&color=lightgray)](LICENSE.md) [![GitHub file size in bytes](https://img.shields.io/github/size/foxly-it/Backup-CloudPanel-Nextcloud/backup.sh?style=flat-square)](https://github.com/foxly-it/Backup-CloudPanel-Nextcloud/blob/main/Backup-CloudPanel-Nextcloud.sh)
 ---
