@@ -27,6 +27,10 @@ echo ""                                                      #
 ####################
 backup_VER="v1.1"
 
+str_repeat() {
+  printf -v v "%-*s" "$1" ""
+  echo "${v// /$2}"
+}
 
 displaytime() {
   local T=$1
