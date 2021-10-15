@@ -8,23 +8,24 @@ NUM_CORES=$(nproc || echo 1)
 ##############################################################
 # Title          : BBNC - BorgBackup Nextcloud               #
 # Description    : BorgBackup Nextcloud for Debian/Ubuntu    #
-#                                                            #
-#                                                            #
+#                  You need to adjust the settings in the    #
+#                  TODO section for yourself                 #
 # Author         : Mark Schenk <info@foxly.de>               #
-# Date           : 2021-10-06 08:32                          #
+# Date           : 2021-10-15 10:03                          #
 # License        : MIT                                       #
-# Version        : 1.1                                       #
+# Version        : 1.2.2                                     #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
-echo ""                                                      #
-echo " Detected OS     : $OS_DISTRO"                         #
-echo " Detected Arch   : $OS_ARCH"                           #
-echo " Detected Cores  : $NUM_CORES"                         #
-echo ""                                                      #
 ##############################################################
 ####################
 # Helper functions #
 ####################
+backup_VER="v1.2.2"
+
+str_repeat() {
+  printf -v v "%-*s" "$1" ""
+  echo "${v// /$2}"
+}
 
 displaytime() {
   local T=$1
@@ -40,6 +41,7 @@ displaytime() {
 
   printf '%d seconds\n' $S
 }
+
 ####################
 # Colors           #
 ####################
@@ -75,45 +77,79 @@ fi
 if ! command_exists lsb_release; then
   apt-get update && apt-get install -qq lsb-release > /dev/null 2>&1
 fi
-#
-#
-#
-#                                       ToDo:
-#
+
+echo -ne "\ec"
+
+WELCOME_TXT="Welcome to BBNC - BorgBackup Nextcloud ${backup_VER}"
+WELCOME_FEN=${#WELCOME_TXT}
+
+echo ""
+echo " $(str_repeat "$WELCOME_FEN" "#")"
+echo " $WELCOME_TXT"
+echo " $(str_repeat "$WELCOME_FEN" "#")"
+echo ""
+
+echo ""                                                      
+echo " Detected OS     : $OS_DISTRO"                         
+echo " Detected Arch   : $OS_ARCH"                           
+echo " Detected Cores  : $NUM_CORES"                         
+echo ""          
+#######################
+# TODO  /   Variables #
+#######################
+
 # Which PHP version do you use e.g. 7.3 , 7.4 , 8.0
 phpversion="8.0"
 # Just adjust the domain here e.g. cloud.example.org or example.org
 domain="nextcloud.domain.tld"
-#
-# DATABASES: Remove "#" for the correct database
-#
-# You can back up all databases or specific databases. For all databases enter "all".  --> Optional only for MariaDB/MySQL databases stored in CloudPanel.
-# databases="db1,db2 or all"
-#
-# echo  " Datenbank Backups "
-# clpctl db:backup --databases=$databases
-# echo  " Datenbank Backups erstellt! "
-#
-# Optional only for PostgreSQL databases that are not stored in CloudPanel.
-echo -e "\e[93mcreate database backups"
-databases="DATABASENAME"
-postbackupdir="/home/cloudpanel/backups"
-sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql
-echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
-#
 # Here you can assign a password (Borg passphrase) for the Borg backup archive.
 backupPassword="P@ssw0rd"
 # Here you have to specify the path to the Borg repository.
-backupRepo="/path/to/Repo"
-#
-#
-#
-# No Changes needed
+backupRepo="/mnt/backup/path"
+
+#####################################################
+# TODO Database - MariaDB/MySQL or PostgreSQL       #
+#####################################################
+
+#########################################################################################################################################################################
+#                                                                             MariaDB / MySQL                                                                           #
+#########################################################################################################################################################################
+#                                                                                                                                                                       #
+# DATABASES: Remove "#" for the correct database                                                                                                                        #
+#                                                                                                                                                                       #
+# You can back up all databases or specific databases. For all databases enter "all".  --> Optional only for MariaDB/MySQL databases stored in CloudPanel.              #
+databases="all"                                                                                                                                            #
+#                                                                                                                                                                       #
+echo -e "\e[93mStart MariaDB/MySQL database backup"                                                                                                                               #
+clpctl db:backup --databases=$databases                                                                                                                               #
+echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                        #
+#########################################################################################################################################################################
+
+#########################################################################################################################################################################
+#                                                                              PostgreSQL                                                                               #
+#########################################################################################################################################################################
+# Optional only for PostgreSQL databases that are not stored in CloudPanel.                                                                                             #
+echo -e "\e[93mStart PostgreSQL database backup"                                                                                                                                 #
+databases="DATABASENAME"
+mkdir -p /home/cloudpanel/backups/$databases                                                                                                                                                #
+postbackupdir="/home/cloudpanel/backups/$databases"                                                                                                                                #
+sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql                                                                                #
+echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                          #
+#########################################################################################################################################################################
+
+
+#######################
+# No Changes needed   #
+#######################
+
 clpLocation="/home/cloudpanel/htdocs/"
-# You must edit this user if you are not using the default installation of ClouPanel. 
+# You must edit this user if you are not using the default installation of CloudPanel. 
 # Otherwise, you can leave this value unchanged.
 user="clp"
-#
+
+#######################
+# Script              #
+#######################
 
 # Nextcloud Maintenance
 echo ""
