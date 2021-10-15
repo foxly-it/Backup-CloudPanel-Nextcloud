@@ -11,16 +11,18 @@ NUM_CORES=$(nproc || echo 1)
 #                  You need to adjust the settings in the    #
 #                  TODO section for yourself                 #
 # Author         : Mark Schenk <info@foxly.de>               #
-# Date           : 2021-10-13 07:32                          #
-# License        : LGPL-2.1                                  #
-# Version        : 1.2.1                                     #
+# Date           : 2021-10-15 10:03                          #
+# License        : MIT                                       #
+# Version        : 1.2.2                                     #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
 ##############################################################
 ####################
 # Helper functions #
 ####################
-backup_VER="v1.2.1"
+
+backup_VER="v1.2.2"
+
 
 str_repeat() {
   printf -v v "%-*s" "$1" ""
@@ -105,6 +107,7 @@ domain="nextcloud.domain.tld"
 # Here you can assign a password (Borg passphrase) for the Borg backup archive.
 backupPassword="P@ssw0rd"
 # Here you have to specify the path to the Borg repository.
+
 backupRepo="/path/to/Repo"
 
 #####################################################
@@ -118,20 +121,22 @@ backupRepo="/path/to/Repo"
 # DATABASES: Remove "#" for the correct database                                                                                                                        #
 #                                                                                                                                                                       #
 # You can back up all databases or specific databases. For all databases enter "all".  --> Optional only for MariaDB/MySQL databases stored in CloudPanel.              #
-# databases="db1,db2 or all"                                                                                                                                            #
+databases="all"                                                                                                                                            #
 #                                                                                                                                                                       #
-# echo -e "\e[93mCreate database backup"                                                                                                                               #
-# clpctl db:backup --databases=$databases                                                                                                                               #
-# echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                        #
+echo -e "\e[93mStart MariaDB/MySQL database backup"                                                                                                                               #
+clpctl db:backup --databases=$databases                                                                                                                               #
+echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                        #
 #########################################################################################################################################################################
 
 #########################################################################################################################################################################
 #                                                                              PostgreSQL                                                                               #
 #########################################################################################################################################################################
 # Optional only for PostgreSQL databases that are not stored in CloudPanel.                                                                                             #
-echo -e "\e[93mCreate database backup"                                                                                                                                 #
-databases="DATABASENAME"                                                                                                                                                #
-postbackupdir="/home/cloudpanel/backups"                                                                                                                                #
+echo -e "\e[93mStart PostgreSQL database backup"                                                                                                                                 #
+databases="DATABASENAME"
+mkdir -p /home/cloudpanel/backups/$databases                                                                                                                                                #
+postbackupdir="/home/cloudpanel/backups/$databases"                                                                                                                                #
+
 sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql                                                                                #
 echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                          #
 #########################################################################################################################################################################
