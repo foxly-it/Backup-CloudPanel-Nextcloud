@@ -20,7 +20,9 @@ NUM_CORES=$(nproc || echo 1)
 ####################
 # Helper functions #
 ####################
+
 backup_VER="v1.2.2"
+
 
 str_repeat() {
   printf -v v "%-*s" "$1" ""
@@ -105,7 +107,8 @@ domain="nextcloud.domain.tld"
 # Here you can assign a password (Borg passphrase) for the Borg backup archive.
 backupPassword="P@ssw0rd"
 # Here you have to specify the path to the Borg repository.
-backupRepo="/mnt/backup/path"
+
+backupRepo="/path/to/Repo"
 
 #####################################################
 # TODO Database - MariaDB/MySQL or PostgreSQL       #
@@ -133,6 +136,7 @@ echo -e "\e[93mStart PostgreSQL database backup"                                
 databases="DATABASENAME"
 mkdir -p /home/cloudpanel/backups/$databases                                                                                                                                                #
 postbackupdir="/home/cloudpanel/backups/$databases"                                                                                                                                #
+
 sudo -u postgres pg_dump $databases > $postbackupdir/BBNC-$(date +%d-%m-%Y_%H-%M-%S).sql                                                                                #
 echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"                                                          #
 #########################################################################################################################################################################
@@ -161,7 +165,7 @@ export BORG_REPO=$backupRepo
 export BORG_PASSPHRASE=$backupPassword
  
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
-trap 'echo $( date ) Backup unterbrochen >&2; exit 2' INT TERM
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
  
 info "Start backup"
  
@@ -181,12 +185,12 @@ backup_exit=$?
 echo ""
 sudo -u $user php$phpversion $clpLocation$domain/occ maintenance:mode --off
 echo ""
-echo "Ende des Backups:"
+echo "End of the backup:"
 echo "Storage space usage of the backups:"
 echo ""
 df -h ${backupRepo}
 
-info "Loeschen von alten Backups"
+info "Delete old backups"
 # Automatically delete old backups
 borg prune                          \
     --prefix '{hostname}-'          \
@@ -200,10 +204,10 @@ prune_exit=$?
 global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
  
 if [ ${global_exit} -eq 0 ]; then
-    echo -e "${FGREEN}Backup und/oder Prune erfolgreich beendet nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FGREEN}Backup and/or Prune successfully completed after $(displaytime $(($(date +%s) - START)))!${FEND}"
 elif [ ${global_exit} -eq 1 ]; then
-    echo -e "${FYELLOW}Backup und/oder Prune beendet mit Warungen nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FYELLOW}Backup and/or Prune ends with warnings after $(displaytime $(($(date +%s) - START)))!${FEND}"
 else
-    echo -e "${FRED}Backup und/oder Prune beendet mit Fehlern nach $(displaytime $(($(date +%s) - START)))!${FEND}"
+    echo -e "${FRED}Backup and/or Prune exits with errors after $(displaytime $(($(date +%s) - START)))!${FEND}"
 fi
 exit ${global_exit}
