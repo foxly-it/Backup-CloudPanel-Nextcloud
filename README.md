@@ -42,5 +42,5 @@ In order to back up data, a repository must first be created. This can be create
 
 #### Recommended
 
-* Debian 10 (__Buster__)
-* Raspbian 10 (__Buster__)
+* Debian 10/11 (__Buster__)
+* Raspbian 10/11 (__Buster__)
