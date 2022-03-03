@@ -11,9 +11,9 @@ NUM_CORES=$(nproc || echo 1)
 #                  You need to adjust the settings in the    #
 #                  TODO section for yourself                 #
 # Author         : Mark Schenk <info@foxly.de>               #
-# Date           : 2022-01-16 12:26                          #
+# Date           : 2022-03-03 09:04                          #
 # License        : MIT                                       #
-# Version        : 1.2.3                                     #
+# Version        : 1.3.0                                     #
 #                                                            #
 # Usage          : bash ./backup.sh                          #
 ##############################################################
@@ -21,7 +21,7 @@ NUM_CORES=$(nproc || echo 1)
 # Helper functions #
 ####################
 
-backup_VER="v1.2.3"
+backup_VER="v1.3.0"
 
 
 str_repeat() {
@@ -100,7 +100,7 @@ echo ""
 # TODO  /   Variables #
 #######################
 
-# Which PHP version do you use e.g. 7.3 , 7.4 , 8.0
+# Which PHP version do you use e.g. 7.3 , 7.4 , 8.0, 8.1
 phpversion="8.0"
 # Just adjust the domain here e.g. cloud.example.org or example.org
 domain="nextcloud.domain.tld"
