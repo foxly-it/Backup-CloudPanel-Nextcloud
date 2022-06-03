@@ -9,7 +9,7 @@
 ---
 </div>
 
-This script is designed for [CloudPanel](CloudPanel.io). It backs up all data located in ```/home/cloudpanel``` to a Borgbackup repository. Furthermore, before the actual backup process, all databases that are specified are backed up and stored in ```/home/cloudpanel/backup```. In the script itself you have to define which database is used, e.g. MySQL/MariaDB or PostgreSQL. Adjustments that need to be changed in the script are marked with TODO.
+This script is designed for [CloudPanel v1/v2](CloudPanel.io). It backs up all data located in ```/home/cloudpanel``` to a Borgbackup repository. Furthermore, before the actual backup process, all databases that are specified are backed up and stored in ```/home/cloudpanel/backup```. In the script itself you have to define which database is used, e.g. MySQL/MariaDB or PostgreSQL. Adjustments that need to be changed in the script are marked with TODO.
 In the script a Nextcloud instance is also considered, should this function not be used, it can simply be commented out.
 
 Of course, this script can be adapted to other systems.
