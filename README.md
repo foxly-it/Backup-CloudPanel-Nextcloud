@@ -35,7 +35,6 @@ In order to back up data, a repository must first be created. This can be create
 ## Features
 
 * MariaDB/MySQL support
-* PostgreSQL support
 * Nextcloud support
 
 ---
