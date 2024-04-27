@@ -11,7 +11,7 @@ NUM_CORES=$(nproc || echo 1)
 #                  You need to adjust the settings in the      #
 #                  TODO section for yourself                   #
 # Author         : Mark Schenk <info@foxly.de>                 #
-# Date           : 2022-05-21 14:08                            #
+# Date           : 2024-04-27 14:08                            #
 # License        : MIT                                         #
 # Version        : 2.0.0                                       #
 #                                                              #
@@ -21,8 +21,8 @@ NUM_CORES=$(nproc || echo 1)
 # TODO  /   Variables #
 #######################
 
-# Which PHP version do you use e.g. 7.3 , 7.4 , 8.0
-phpversion="8.1"
+# Which PHP version do you use e.g. 8.2, 8.3
+phpversion="8.2"
 
 # Just adjust the domain here e.g. cloud.example.org or example.org
 domain="cloud.example.tld"
@@ -31,7 +31,8 @@ domain="cloud.example.tld"
 backupPassword="P@ssw0rd"
 
 # Here you have to specify the path to the Borg repository.
-backupRepo="/mnt/"
+backupRepo="/mnt/backup"
+backupDatabase="/mnt/backup/database"
 
 # You must edit this user to Site User from the Domain.
 siteUser="User"
@@ -129,11 +130,16 @@ sudo -u $siteUser php$phpversion $ncLocation$domain/occ maintenance:mode --on
 echo ""
 
 # DATABASES: Remove "#" for the correct database
-# You can backup only all databases in CPv2 specific databases.
+# You have to enter a specific database. It is no longer possible to save all databases at the same time.
 
-echo -e "\e[93mStart MariaDB/MySQL database backup"
+####################
+# MySQL Backup     #
+####################
 
-su -s /bin/bash -c '/usr/bin/clpctl db:backup --retentionPeriod=7' clp
+echo -e "\e[93mStart MySQL database backup"
+
+bash clpctl db:export --databaseName=DATABASENAME --file=$backupDatabase/backup_$(date +%d-%m-%Y).sql.gz
+
 
 echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
 
@@ -143,9 +149,6 @@ echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($
 #######################
 # Script              #
 #######################
-
-
-
 
 export BORG_REPO=$backupRepo
 export BORG_PASSPHRASE=$backupPassword
