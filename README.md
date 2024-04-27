@@ -14,6 +14,8 @@ A Nextcloud instance is also considered in the script; if this function is not u
 
 Of course, this script can be adapted to other systems.
 
+CloudPanel v1 is obsolete and is no longer supported.
+
 ---
 ## Usage
 
