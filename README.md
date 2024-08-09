@@ -43,4 +43,5 @@ In order to back up data, a repository must first be created. This can be create
 
 #### Recommended
 
-* Debian 11/12 (__bookworm__)
+* Debian 12 (__bookworm__)
+* Ubuntu 24.04 (__Noble Numbat__)

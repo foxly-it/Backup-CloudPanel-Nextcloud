@@ -11,18 +11,18 @@ NUM_CORES=$(nproc || echo 1)
 #                  You need to adjust the settings in the      #
 #                  TODO section for yourself                   #
 # Author         : Mark Schenk <info@foxly.de>                 #
-# Date           : 2024-04-27 14:08                            #
+# Date           : 2024-08-09 14:08                            #
 # License        : MIT                                         #
-# Version        : 2.0.0                                       #
+# Version        : 2.0.1                                       #
 #                                                              #
-# Usage          : bash ./backupcpv2.sh                            #
+# Usage          : bash ./backupcpv2.sh                        #
 ################################################################
 #######################
 # TODO  /   Variables #
 #######################
 
 # Which PHP version do you use e.g. 8.2, 8.3
-phpversion="8.2"
+phpversion="8.3"
 
 # Just adjust the domain here e.g. cloud.example.org or example.org
 domain="cloud.example.tld"
@@ -37,11 +37,14 @@ backupDatabase="/mnt/backup/database"
 # You must edit this user to Site User from the Domain.
 siteUser="User"
 
+# Which folder should be backed up? (e.G. /home/SiteUser/htdocs/nextcloud)
+dirBackup="/home/"
+
 
 ####################
 # Helper functions #
 ####################
-backup_VER="v2.0.0"
+backup_VER="v2.0.1"
 
 str_repeat() {
   printf -v v "%-*s" "$1" ""
@@ -143,7 +146,7 @@ bash clpctl db:export --databaseName=DATABASENAME --file=$backupDatabase/backup_
 
 echo -e "${FGREEN}Backup has been finished successfully after $(displaytime $(($(date +%s) - START)))!${FEND}"
 
-#########################################################################################################################################################################
+####################################################################################################################################################################
 
 
 #######################
@@ -165,7 +168,7 @@ borg create                         \
     --stats                         \
     --compression lz4               \
     ::'{hostname}-{now}'            \
-    /home/                          \
+    $dirBackup                      \
 
 
 backup_exit=$?
@@ -182,7 +185,7 @@ df -h ${backupRepo}
 info "Loeschen von alten Backups"
 # Automatically delete old backups
 borg prune                          \
-    --prefix '{hostname}-'          \
+    --glob-archives '{hostname}-'   \
     --keep-daily    7               \
     --keep-weekly   4               \
     --keep-monthly  6
